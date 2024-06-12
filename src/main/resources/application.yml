@@ -14,3 +14,19 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  config:
+    import:
+      - "application_prod.yml"
+      - "application_qa.yml"
+
+build:
+  version: "1.0"
+
+cards:
+  message: "Get card's information on local APIs"
+  contactDetails:
+    name: "Robert cards developer"
+    email: "trangbn580@gmail,com"
+  onCallSupport:
+    - (555) 123 123
+    - (555) 123 255

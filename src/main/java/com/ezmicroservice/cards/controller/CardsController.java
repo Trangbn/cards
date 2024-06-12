@@ -1,6 +1,7 @@
 package com.ezmicroservice.cards.controller;
 
 import com.ezmicroservice.cards.constant.CardsConstants;
+import com.ezmicroservice.cards.dto.CardsContactInfoDto;
 import com.ezmicroservice.cards.dto.CardsDto;
 import com.ezmicroservice.cards.dto.ErrorResponseDto;
 import com.ezmicroservice.cards.dto.ResponseDto;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +28,17 @@ import org.springframework.web.bind.annotation.*;
 )
 @RestController
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
-@AllArgsConstructor
 @Validated
 public class CardsController {
 
     private ICardsService cardService;
+
+    public CardsController(ICardsService cardsService) {
+        this.cardService = cardsService;
+    }
+
+    @Autowired
+    private CardsContactInfoDto contactInfoDto;
 
     @Operation(
             summary = "Create cards REST API",
@@ -117,5 +125,10 @@ public class CardsController {
         boolean isDeleted = cardService.deleteCards(mobileNumber);
         return isDeleted ? ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(CardsConstants.STATUS_200, CardsConstants.MESSAGE_200))
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto(CardsConstants.STATUS_417, CardsConstants.MESSAGE_417_DELETE));
+    }
+
+    @GetMapping("/cards-info")
+    public ResponseEntity<CardsContactInfoDto> getCardInfo() {
+        return ResponseEntity.status(HttpStatus.OK).body(contactInfoDto);
     }
 }
